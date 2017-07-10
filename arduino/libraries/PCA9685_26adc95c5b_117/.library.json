@@ -1,0 +1,32 @@
+{
+    "name": "PCA9685", 
+    "repository": {
+        "url": "https://github.com/TOppenhoff/PCA9685.git", 
+        "type": "git"
+    }, 
+    "platforms": [
+        "atmelavr"
+    ], 
+    "frameworks": [
+        "arduino"
+    ], 
+    "version": "26adc95c5b", 
+    "authors": [
+        {
+            "url": "https://github.com/TOppenhoff", 
+            "maintainer": false, 
+            "email": null, 
+            "name": "Thomas Oppenhoff"
+        }
+    ], 
+    "keywords": [
+        "pwm", 
+        "led", 
+        "controller", 
+        "i2c", 
+        "twi"
+    ], 
+    "exclude": "doc", 
+    "id": 117, 
+    "description": "Library for using PCA9685(PCA) - 16-channel, 12-bit PWM Fm+ I2C-bus LED controller"
+}
