@@ -37,12 +37,12 @@ void loop() {
       int angle = Serial.read();
       int board = servo >> 4;
       servo = servo & 0x0F;
-      //Serial.print("Board: ");
-      //Serial.print(board);
-      //Serial.print(" Servo: ");
-      //Serial.print(servo);
-      //Serial.print(" Angle: ");
-      //Serial.println(angle);
+      Serial.print("Board: ");
+      Serial.print(board);
+      Serial.print(" Servo: ");
+      Serial.print(servo);
+      Serial.print(" Angle: ");
+      Serial.println(angle);
       if(board == 0){
         pwm0.setPin(servo, pulsewidth(angle)); // 307 = 4096 / 20ms * 1.5ms
         }
