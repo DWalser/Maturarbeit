@@ -50,9 +50,9 @@ class BServo(object):
         angle = int(angle)
         self.serial.write(('S' + chr(self.servo_id) + chr(angle)).encode('latin_1'))
 
-        while not self.serial.in_waiting:
-            time.sleep(0.1)
-        print(self.serial.read_all())
+        #while not self.serial.in_waiting:
+        #    time.sleep(0.1)
+        #print(self.serial.read_all())
 
     def toDefaultPosition(self):
         self.turnAngle(90)
