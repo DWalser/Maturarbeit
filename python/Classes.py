@@ -5,6 +5,7 @@ import time
 class BServo(object):
 
     write_time_out = 0.05
+    angle_tolerance = 1.0
 
     def __init__(self, port, board_id, servo_nr, lowvalue=45, highvalue=135, range=90):
         if board_id < 0 or board_id > 15:
@@ -24,6 +25,7 @@ class BServo(object):
         self.serial = serial.Serial(port)
 
         self._time_last_write = 0
+        self._last_transmitted_angle = 0
 
     def __del__(self):
         self.serial.close()
@@ -45,21 +47,34 @@ class BServo(object):
         self.turnAngle(self.angle(value=value))
 
     def turnAngle(self, angle):
-        if time.time() > self._time_last_write + BServo.write_time_out:
-            min_angle = 90. - 1.*self.range/2.
-            max_angle = 90. + 1.*self.range/2.
-            if angle < min_angle:
-                angle = min_angle
-            elif angle > max_angle:
-                angle = max_angle
-            angle = int(angle)
+        if self.out_of_dead_time() and self.is_new_angle(angle):
+            angle = self.int_angle_in_range(angle)
             self.serial.write(('S' + chr(self.servo_id) + chr(angle)).encode('latin_1'))
 
+            self._last_transmitted_angle = angle
             self._time_last_write = time.time()
 
             #while not self.serial.in_waiting:
             #    time.sleep(0.1)
             #print(self.serial.read_all())
+
+    def int_angle_in_range(self, angle):
+        min_angle = 90. - 1. * self.range / 2.
+        max_angle = 90. + 1. * self.range / 2.
+        if angle < min_angle:
+            new_angle = min_angle
+        elif angle > max_angle:
+            new_angle = max_angle
+        else:
+            new_angle = angle
+        return int(new_angle)
+
+    def out_of_dead_time(self):
+        return time.time() > self._time_last_write + BServo.write_time_out
+
+    def is_new_angle(self, angle):
+        int_angle = self.int_angle_in_range(angle)
+        return not (self._last_transmitted_angle - self.angle_tolerance < int_angle < self._last_transmitted_angle + self.angle_tolerance)
 
     def toDefaultPosition(self):
         self.turnAngle(90)
