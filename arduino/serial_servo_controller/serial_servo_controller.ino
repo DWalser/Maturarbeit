@@ -47,7 +47,7 @@ void loop() {
         pwm0.setPin(servo, pulsewidth(angle)); // 307 = 4096 / 20ms * 1.5ms
         }
       else if(board == 1){
-        pwm0.setPin(servo, pulsewidth(angle)); // 307 = 4096 / 20ms * 1.5ms
+        pwm1.setPin(servo, pulsewidth(angle)); // 307 = 4096 / 20ms * 1.5ms
         }
       else if(board == 2){
         pwm2.setPin(servo, pulsewidth(angle)); // 307 = 4096 / 20ms * 1.5ms

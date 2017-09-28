@@ -4,6 +4,8 @@ import time
 
 class BServo(object):
 
+    write_time_out = 0.05
+
     def __init__(self, port, board_id, servo_nr, lowvalue=45, highvalue=135, range=90):
         if board_id < 0 or board_id > 15:
             raise ValueError("wrong board id")
@@ -20,6 +22,8 @@ class BServo(object):
         self.servo_id = self.board_id << 4 | self.servo_nr
 
         self.serial = serial.Serial(port)
+
+        self._time_last_write = 0
 
     def __del__(self):
         self.serial.close()
@@ -41,18 +45,21 @@ class BServo(object):
         self.turnAngle(self.angle(value=value))
 
     def turnAngle(self, angle):
-        min_angle = 90. - 1.*self.range/2.
-        max_angle = 90. + 1.*self.range/2.
-        if angle < min_angle:
-            angle = min_angle
-        elif angle > max_angle:
-            angle = max_angle
-        angle = int(angle)
-        self.serial.write(('S' + chr(self.servo_id) + chr(angle)).encode('latin_1'))
+        if time.time() > self._time_last_write + BServo.write_time_out:
+            min_angle = 90. - 1.*self.range/2.
+            max_angle = 90. + 1.*self.range/2.
+            if angle < min_angle:
+                angle = min_angle
+            elif angle > max_angle:
+                angle = max_angle
+            angle = int(angle)
+            self.serial.write(('S' + chr(self.servo_id) + chr(angle)).encode('latin_1'))
 
-        #while not self.serial.in_waiting:
-        #    time.sleep(0.1)
-        #print(self.serial.read_all())
+            self._time_last_write = time.time()
+
+            #while not self.serial.in_waiting:
+            #    time.sleep(0.1)
+            #print(self.serial.read_all())
 
     def toDefaultPosition(self):
         self.turnAngle(90)

@@ -23,7 +23,7 @@ def my_handler(scene):
   # Get the Euler x rotation in degrees.  The rotation for "Cube" will be applied to servo on pin 9
   servoAngle = degrees(bpy.data.objects['Cube'].rotation_euler.x)
  
-  turnServo(0,0,servoAngle)  
+  turnServo(0,0,servoAngle)
 
 # Register the handler to be called once the frame has changed.
 bpy.app.handlers.frame_change_post.append(my_handler)
